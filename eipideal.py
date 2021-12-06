@@ -1,8 +1,6 @@
 import json
 import boto3
 import datetime
-#from datetime import datetime , date
-#from datetime import date
 import os
 import requests
 
@@ -43,7 +41,6 @@ def lambda_handler(event, context):
         eip = getElasticIPs(region)
         #print(eip)
         result = result + eip
-    # result = eips("us-east-2")
     
     url = "https://servicecafedev.service-now.com/api/sn_cmp/resource_optimization" 
 
@@ -69,7 +66,7 @@ def lambda_handler(event, context):
         # 'data': json.loads(json.dumps(event_res, default=datetime_handler))
     }
 
-def getElasticIPs(region):
+def getelasticips(region):
     print("Current region = ", region)
     outcome = []
 
@@ -115,7 +112,7 @@ def getElasticIPs(region):
         ideal_time = idle_days(detach_time.date(), present_day)
         
         #if ideal_time != 0 :
-        if "InstanceId" and "NetworkInterfaceId" not in eip:
+        if "instanceid" and "NetworkInterfaceId" not in eip:
             outcome.append({
                 'ip': eip['PublicIp'],
                 'name': ip_name,
@@ -130,7 +127,7 @@ def getElasticIPs(region):
     return outcome
   
 
-def getIpAllocationTime(eipAllocationId, detach_time):
+def getipallocationtime(eipallocationid, detach_time):
     
     event_res = ct_client.lookup_events(
            
@@ -150,7 +147,7 @@ def getIpAllocationTime(eipAllocationId, detach_time):
     
     return detach_time
     
-def getIpAssociationId(eipAllocationId):
+def getipassociationid(eipallocationid):
     event_res = ct_client.lookup_events(
         LookupAttributes = [
             {
@@ -169,7 +166,7 @@ def getIpAssociationId(eipAllocationId):
     
     return eip_association_id
 
-def getIpDisassociateTime(eip_association_id, detach_time):
+def getipdisassociatetime(eip_association_id, detach_time):
     event_res = ct_client.lookup_events(
         LookupAttributes = [
             {
@@ -189,8 +186,6 @@ def getIpDisassociateTime(eip_association_id, detach_time):
     return detach_time    
 
 def idle_days(detachday, present_day):
-    # print("detachday = ", detachday)
-    # print("present_day = ", present_day)
     
     
     # print(type(present_day), type(detachday))
