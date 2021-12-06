@@ -34,8 +34,8 @@ def lambda_handler(event, context):
         'Content-Type': 'application/x-www-form-urlencoded',
         'Cookie': 'BIGipServerpool_servicecafedev=2541902346.40766.0000; JSESSIONID=C0FFB74F88A66ED5E90835E3CB0F8B4D; glide_user_route=glide.8145274ea778054324de3882d975bce4'
     }
-    responseSNOW = requests.request("POST", url, headers=headers, data=payload)
-    token = json.loads(responseSNOW.text)["access_token"]
+    responsesnow = requests.request("POST", url, headers=headers, data=payload)
+    token = json.loads(responsesnow.text)["access_token"]
     result = []
     
     for region in list_of_Regions:
@@ -58,8 +58,8 @@ def lambda_handler(event, context):
     data = result
     print(data)
     # #print(json.dumps(data)) 
-    responseSNOW = requests.request("POST", url, headers=headers1, data=json.dumps(data))
-    print(responseSNOW)
+    responsesnow= requests.request("POST", url, headers=headers1, data=json.dumps(data))
+    print(responsesnow)
  
 
     return {
