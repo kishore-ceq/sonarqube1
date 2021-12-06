@@ -72,7 +72,6 @@ def getelasticips(region):
 
     
     client = boto3.client('ec2',region_name=region)
-    # ct_client = boto3.client('cloudtrail')
     
     filter = [
         {
@@ -112,7 +111,7 @@ def getelasticips(region):
         ideal_time = idle_days(detach_time.date(), present_day)
         
         #if ideal_time != 0 :
-        if "instanceid" and "NetworkInterfaceId" not in eip:
+        if "Instanceid" and "NetworkInterfaceId" not in eip:
             outcome.append({
                 'ip': eip['PublicIp'],
                 'name': ip_name,
