@@ -111,7 +111,7 @@ def getelasticips(region):
         ideal_time = idle_days(detach_time.date(), present_day)
         
         #if ideal_time != 0 :
-        if "Instance Id" and "NetworkInterfaceId" not in eip:
+        if "PublicIp" and "NetworkInterfaceId" not in eip:
             outcome.append({
                 'ip': eip['PublicIp'],
                 'name': ip_name,
