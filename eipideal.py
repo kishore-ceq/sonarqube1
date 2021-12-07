@@ -111,16 +111,16 @@ def getelasticips(region):
         ideal_time = idle_days(detach_time.date(), present_day)
         
         #if ideal_time != 0 :
-        if "PublicIp" and "NetworkInterfaceId" not in eip:
+        if "NetworkInterfaceId" not in eip:
             outcome.append({
                 'ip': eip['PublicIp'],
                 'name': ip_name,
                 'location': eip['NetworkBorderGroup'],
                 'idle_days': ideal_time,
-    			'provider' : "AWS",
-    			'resource_type' : "AWS.NetWork/networkInterfaces",
-    			'account' : account_id, 
-    			
+		'provider' : "AWS",
+		'resource_type' : "AWS.NetWork/networkInterfaces",
+		'account' : account_id, 
+
             })
         
     return outcome
