@@ -49,9 +49,9 @@ def lambda_handler(event, context):
       'Content-Type': 'application/json'
 
     }   
-    data = {
-        "elp_data": result
-    }
+#     data = {
+#         "elp_data": result
+#     }
     data = result
     print(data)
     # #print(json.dumps(data)) 
@@ -73,13 +73,13 @@ def getelasticips(region):
     
     client = boto3.client('ec2',region_name=region)
     
-    filter = [
+    a = [
         {
             'Name': 'domain',
             'Values': ['vpc']
         }
     ]
-    elastic_ip = client.describe_addresses(Filters=filter)
+    elastic_ip = client.describe_addresses(Filters=a)
     
     present_day = datetime.date.today()
     print("present_day = ", present_day)
