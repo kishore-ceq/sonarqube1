@@ -4,20 +4,17 @@ import datetime
 import os
 import requests
 
-
 client = boto3.client('ec2')
 all_regions=client.describe_regions()
 list_of_Regions = []
 for each_reg in all_regions['Regions']:
     list_of_Regions.append(each_reg['RegionName'])
 
-
 ct_client = boto3.client('cloudtrail')
 
 # Get the current AWS Account ID
 sts = boto3.client("sts")
 account_id = sts.get_caller_identity()["Account"]
- 
 
 def lambda_handler(event, context):
     client_id = os.environ['CLIENT_ID']
@@ -37,9 +34,7 @@ def lambda_handler(event, context):
     result = []
     
     for region in list_of_Regions:
-        #print(region)
         eip = getElasticIPs(region)
-        #print(eip)
         result = result + eip
     
     url = "https://servicecafedev.service-now.com/api/sn_cmp/resource_optimization" 
@@ -49,28 +44,19 @@ def lambda_handler(event, context):
       'Content-Type': 'application/json'
 
     }   
-#     data = {
-#         "elp_data": result
-#     }
+
     data = result
-    print(data)
-    # #print(json.dumps(data)) 
+    print(data) 
     responsesnow= requests.request("POST", url, headers=headers1, data=json.dumps(data))
     print(responsesnow)
- 
-
     return {
-        #'statuscode':200,
-        #'body': result
         'body': json.loads(json.dumps(result, default=datetime_handler))
-        # 'data': json.loads(json.dumps(event_res, default=datetime_handler))
     }
 
 def getelasticips(region):
     print("Current region = ", region)
     outcome = []
-
-    
+	
     client = boto3.client('ec2',region_name=region)
     
     a = [
@@ -83,23 +69,13 @@ def getelasticips(region):
     
     present_day = datetime.date.today()
     print("present_day = ", present_day)
-    
-    
+
     for eip in elastic_ip['Addresses']:
-        
-        
-        
         detach_time = datetime.datetime.now()
-        
         detach_time = getIpAllocationTime(eip['AllocationId'], detach_time)
-        
-        eip_association_id = getIpAssociationId(eip['AllocationId'])
-        
+        eip_association_id = getIpAssociationId(eip['AllocationId']) 
         if(eip_association_id):
             detach_time = getIpDisassociateTime(eip_association_id, detach_time)
-        
-        
-        # print(ip)
         ip_name = ""
         if('Tags' in eip):
             for tag in eip['Tags']:
@@ -109,8 +85,7 @@ def getelasticips(region):
         
         print("detach_time = ", detach_time)
         ideal_time = idle_days(detach_time.date(), present_day)
-        
-        #if ideal_time != 0 :
+       
         if "NetworkInterfaceId" not in eip:
             outcome.append({
                 'ip': eip['PublicIp'],
@@ -175,8 +150,6 @@ def getipdisassociatetime(eip_association_id, detach_time):
         ],
         MaxResults=1
     )
-    
-   
     for event in event_res['Events']:
         if (event['EventName'] == 'DisassociateAddress'):
             detach_time = event['EventTime']
@@ -185,15 +158,9 @@ def getipdisassociatetime(eip_association_id, detach_time):
     return detach_time    
 
 def idle_days(detachday, present_day):
-    
-    
-    # print(type(present_day), type(detachday))
+   
     day_diff = present_day - detachday
-    #print("day_diff",day_diff)
-    
-    
     ideal_time = day_diff.days
-   # print(ideal_time)
     return ideal_time
 
 
