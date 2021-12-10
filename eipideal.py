@@ -162,8 +162,6 @@ def idle_days(detachday, present_day):
     day_diff = present_day - detachday
     ideal_time = day_diff.days
     return ideal_time
-
-
 def datetime_handler(x):
     if isinstance(x, datetime.datetime):
         return x.isoformat()
